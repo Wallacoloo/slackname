@@ -4,7 +4,7 @@ from slackclient import SlackClient
 import csv, time
 
 # If an API call fails, how many seconds to wait before trying again
-rate_limit_sleep = 10
+rate_limit_sleep = 60
 
 token = open("api.token", "r").read().strip()
 client = SlackClient(token)
