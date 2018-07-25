@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from slackclient import SlackClient
-import csv, time
+import csv, time, sys
 
 # If an API call fails, how many seconds to wait before trying again
 rate_limit_sleep = 60
@@ -20,7 +20,7 @@ def change_name_to(name):
 
 
 while True:
-    for command in csv.reader(open("commands.csv")):
+    for command in csv.reader(open(sys.argv[1])):
         delay, name = command
         delay = float(delay)
         print("name = {name} for {delay} seconds".format(**globals()))
