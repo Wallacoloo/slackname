@@ -1,4 +1,5 @@
 status_expiration,0
 status_text,
 status_emoji,{clock_emoji_trunc}
-delay,300.0
+publish,
+delay,2

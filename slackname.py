@@ -15,6 +15,7 @@ class Executor(object):
     def __init__(self, client):
         self._client = client
         self._profile = {}
+        self._published_profile = {}
         tzname = os.environ.get('TZ', 'America/Los_Angeles')
         self._timezone = pytz.timezone(tzname)
 
@@ -41,19 +42,29 @@ class Executor(object):
         # Allow the user to perform substitution
         value = value.format(**self._get_env())
 
-        if field == 'delay':
-            self._set_api()
-            time.sleep(float(value))
+        handler = getattr(self, '_handle_{}'.format(field), None)
+        if handler:
+            handler(value)
         else:
             self._profile[field] = value
 
-    def _set_api(self):
+    def _handle_delay(self, value):
+        value = float(value)
+        if value > 2:
+            print('delay', value)
+        time.sleep(float(value))
+
+    def _handle_publish(self, _value):
         '''
         let slack know about our desired profile info
         '''
+        if self._profile == self._published_profile:
+            return
         while True:
+            print('publish', self._profile)
             resp = self._client.api_call('users.profile.set', profile=self._profile)
             if resp.get('ok'):
+                self._published_profile = self._profile.copy()
                 break
             print(self._profile)
             print(resp)
@@ -79,7 +90,6 @@ def main():
 
     while True:
         for command in csv.reader(open(sys.argv[1])):
-            print(command)
             executor.execute(command)
 
 if __name__ == '__main__':
