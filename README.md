@@ -18,6 +18,8 @@ Or:
 python3 -m pip install --user slackclient
 ```
 
+Also install pytz
+
 Navigate to https://api.slack.com/custom-integrations/legacy-tokens and obtain an API token.
 Save that token to a file named "api.token".
 Run `./slackname.py <path/to/commands.csv>`
