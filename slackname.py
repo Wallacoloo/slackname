@@ -39,6 +39,10 @@ class Executor(object):
             email
         '''
         field, value = command
+
+        auto_publish = field.startswith('+')
+        field = field.lstrip('+')
+
         # Allow the user to perform substitution
         value = value.format(**self._get_env())
 
@@ -48,13 +52,16 @@ class Executor(object):
         else:
             self._profile[field] = value
 
+        if auto_publish:
+            self._handle_publish()
+
     def _handle_delay(self, value):
         value = float(value)
         if value > 2:
             print('delay', value)
         time.sleep(float(value))
 
-    def _handle_publish(self, _value):
+    def _handle_publish(self, _value=''):
         '''
         let slack know about our desired profile info
         '''
