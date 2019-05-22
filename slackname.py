@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from slackclient import SlackClient
+from slack import WebClient
 import csv
 import datetime
 import os
@@ -69,7 +69,7 @@ class Executor(object):
             return
         while True:
             print('publish', self._profile)
-            resp = self._client.api_call('users.profile.set', profile=self._profile)
+            resp = self._client.users_profile_set(profile=self._profile)
             if resp.get('ok'):
                 self._published_profile = self._profile.copy()
                 break
@@ -91,8 +91,8 @@ class Executor(object):
 
 def main():
     token = open('api.token', 'r').read().strip()
-    client = SlackClient(token)
-    print(client.api_call('users.profile.get'))
+    client = WebClient(token=token)
+    print(client.users_profile_get())
     executor = Executor(client)
 
     while True:
